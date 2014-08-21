@@ -54,10 +54,14 @@ print "$mindate $maxdate\n";
 print "$minlat,$minlon $maxlat,$maxlon\n";
 
 $n = 0;
-for ($date = $maxdate - 1; $date < $maxdate; $date += ($maxdate - $mindate) / 100) {
+for ($date = $mindate; $date < $maxdate; $date += ($maxdate - $mindate) / 100) {
 	print "$date\n";
 	$outfile = sprintf("%s.out/%05d", $file, $n++);
 
-	system "/data2/data/github/datamaps/render -A -xl$date -- $file.dm 12 $minlat $minlon $maxlat $maxlon | /data2/data/github/pngquant/pngquant 64 > $outfile.png";
+	system "/data2/data/github/datamaps/render -A -xl$date -- $file.dm 12 $minlat $minlon $maxlat $maxlon | /data2/data/github/pngquant/pngquant 64 | pngtopnm | ppmtogif > $outfile.gif";
 }
 
+$cmd = "";
+for ($i = 0; $i < $n; $i++) {
+	$cmd .= " $i.gif";
+}
