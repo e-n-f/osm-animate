@@ -195,17 +195,30 @@ int max = 10;
 static void XMLCALL end(void *data, const char *el) {
 	if (strcmp(el, "way") == 0) {
 		int x;
+		struct tm tm;
+		time_t t = 0;
+
+		if (sscanf(thetimestamp, "%d-%d-%dT%d:%d:%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec) == 6) {
+			tm.tm_isdst = -1;
+			tm.tm_year -= 1900;
+			tm.tm_mon -= 1;
+			t = mktime(&tm);
+		} else {
+			fprintf(stderr, "couldn't parse %s\n", thetimestamp);
+		}
+
 		for (x = 0; x < thenodecount; x += max - 1) {
 			if (x + 1 < thenodecount) {
-				printf("%s ", thetimestamp);
-
 				int i;
 				for (i = x; i < x + max && i < thenodecount; i++) {
 					printf("%lf,%lf ", thenodes[i]->lat / 1000000.0,
 							   thenodes[i]->lon / 1000000.0);
 				}
 
+				printf(" 32:%d", (int) t);
+
 				printf("// id=%u ", theway);
+				printf("// timestamp=%s ", thetimestamp);
 				printf("%s\n", tags);
 			}
 		}
