@@ -72,8 +72,9 @@ for ($z = 0; $z < 32; $z++) {
 
 $wid = (1 << $z) * 256 * $lond / 360;
 $scale = int(256 * $width / $wid);
+$maxlon = $minlon + ($maxlon - $minlon) * ($width + .5) / ($wid * $scale / 256);
 
-print "/data2/data/github/datamaps/render -A -xl$date -- $file.dm -T$scale $z $minlat $minlon $maxlat $maxlon | /data2/data/github/pngquant/pngquant 256 | pngtopnm | ppmtogif > $outfile.gif\n";
+# $mindate = $maxdate - 365 * 3.5 * 86400;
 
 $n = 0;
 $interval = ($maxdate - $mindate) / 100;
@@ -81,7 +82,7 @@ for ($date = $mindate; $date < $maxdate + 10 * $interval; $date += $interval) {
 	print "$date\n";
 	$outfile = sprintf("%s.out/%05d", $file, $n++);
 
-	system "/data2/data/github/datamaps/render -A -xl$date -- $file.dm $z $minlat $minlon $maxlat $maxlon | /data2/data/github/pngquant/pngquant 256 | pngtopnm | ppmtogif > $outfile.gif";
+	system "/data2/data/github/datamaps/render -T$scale -A -xl$date -- $file.dm $z $minlat $minlon $maxlat $maxlon | /data2/data/github/pngquant/pngquant 256 | pngtopnm | ppmtogif > $outfile.gif";
 }
 
 system "gifsicle --delay 6 -O3 -lforever --colors 8 $file.out/*.gif > $file.gif";
