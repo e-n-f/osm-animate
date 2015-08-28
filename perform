@@ -15,16 +15,12 @@ die if ($file eq "");
 
 mkdir "$file.out";
 
+@dates = ();
 
 open(IN, "$file.snap");
 while (<IN>) {
 	if (/ 32:(\d+)/) {
-		if ($1 > $maxdate) {
-			$maxdate = $1;
-		}
-		if ($1 < $mindate) {
-			$mindate = $1;
-		}
+		push @dates, $1;
 	}
 
 	@points = split(/ /);
@@ -55,7 +51,6 @@ $maxlat = $lat[$#lat * .90];
 $minlon = $lon[$#lon * .10];
 $maxlon = $lon[$#lon * .90];
 
-print "$mindate $maxdate\n";
 print "$minlat,$minlon $maxlat,$maxlon\n";
 
 $lond = $maxlon - $minlon;
@@ -79,8 +74,9 @@ $maxlon = $minlon + ($maxlon - $minlon) * ($width + .5) / ($wid * $scale / 256);
 $mindate = $maxdate - 5 * 86400;
 
 $n = 0;
-$interval = ($maxdate - $mindate) / 100;
-for ($date = $mindate; $date < $maxdate + 10 * $interval; $date += $interval) {
+@dates = sort { $a <=> $b } @dates;
+for ($d = 0; $d <= 100; $d++) {
+	$date = $dates[$d * $#dates / 100];
 	print "$date\n";
 	$outfile = sprintf("%s.out/%05d", $file, $n++);
 
