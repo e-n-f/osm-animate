@@ -39,5 +39,5 @@ Then, to make the gif, do:
     ./perform brasilia
 
 which reads `brasilia.snap` to find the bounds of the area and the range of times represented,
-and makes multiple renderings of `brasilia.dm` into brasilia.out and ultimately combines them
-into `brasilia.gif`.
+and makes multiple renderings of `brasilia.dm` into a temporary directory of images, `brasilia.out`,
+and ultimately combines them into `brasilia.gif`.
