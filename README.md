@@ -26,12 +26,15 @@ You need an OSM extract with timestamps, like the ones that [Mapzen hosts](https
 
     curl -O https://s3.amazonaws.com/metro-extracts.mapzen.com/brasilia_brazil.osm.bz2
 
-Then extract the vectors from the OSM data and encode them with datamaps:
+Then extract the vectors from the OSM data into a datamaps flat file:
 
     bzcat brasilia_brazil.osm.bz2 | ./snap > brasilia.snap
+
+and then encode them with datamaps:
+
     cat brasilia.snap | ./datamaps/encode -z20 -m32 -o brasilia.dm
 
-And then do:
+Then, to make the gif, do:
 
     ./perform brasilia
 
