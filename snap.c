@@ -229,6 +229,7 @@ static void XMLCALL end(void *data, const char *el) {
 
 int main(int argc, char *argv[]) {
 	int i;
+	int ft;
 	extern int optind;
 	extern char *optarg;
 
@@ -246,13 +247,15 @@ int main(int argc, char *argv[]) {
 			exit(EXIT_FAILURE);
 		}
 	}
-	
-	if (tmpnam(tmpfname) == NULL) {
+
+	strcpy(tmpfname, "tmpname.XXXXXX");
+	ft = mkstemp(tmpfname);
+	if (ft < 0) {
 		perror(tmpfname);
 		exit(EXIT_FAILURE);
 	}
 
-	tmp = fopen(tmpfname, "w");
+	tmp = fdopen(ft,"w");
 	if (tmp == NULL) {
 		perror(tmpfname);
 		exit(1);
